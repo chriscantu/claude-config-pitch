@@ -705,69 +705,6 @@ h1.display, h2.display {
     color: var(--card-bg);
 }
 
-/* ===========================================
-   INLINE EDIT — opt-in
-   =========================================== */
-.edit-hotzone {
-    position: fixed;
-    top: 0; left: 0;
-    width: 80px; height: 80px;
-    z-index: 10000;
-    cursor: pointer;
-}
-.edit-toggle {
-    position: fixed;
-    top: clamp(1rem, 2vh, 1.5rem);
-    left: clamp(1rem, 2vw, 1.5rem);
-    width: clamp(36px, 4vw, 48px);
-    height: clamp(36px, 4vw, 48px);
-    border-radius: 50%;
-    border: 2px solid var(--card-bg);
-    background: var(--bg-primary);
-    color: var(--card-bg);
-    font-size: clamp(0.9rem, 1.4vw, 1.2rem);
-    cursor: pointer;
-    z-index: 10001;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, background 0.2s;
-    display: grid; place-items: center;
-}
-.edit-toggle.show, .edit-toggle.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-.edit-toggle.active {
-    background: var(--card-bg);
-    color: var(--text-on-card);
-}
-.edit-toggle:hover { background: var(--card-bg); color: var(--text-on-card); }
-.edit-banner {
-    position: fixed;
-    bottom: clamp(1rem, 2vh, 1.5rem);
-    left: 50%;
-    transform: translateX(-50%) translateY(120%);
-    background: var(--card-bg);
-    color: var(--text-on-card);
-    padding: clamp(0.5rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
-    border-radius: 999px;
-    font-family: var(--font-display);
-    font-size: clamp(0.7rem, 0.95vw, 0.9rem);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    z-index: 10000;
-    transition: transform 0.3s var(--ease-out-expo);
-}
-.edit-banner.active { transform: translateX(-50%) translateY(0); }
-body.edit-active [contenteditable="true"] {
-    outline: 1.5px dashed var(--card-bg);
-    outline-offset: 4px;
-    border-radius: 4px;
-}
-body.edit-active [contenteditable="true"]:focus {
-    outline: 2px solid var(--card-bg);
-    background: rgba(255, 87, 34, 0.08);
-}
 </style>
 </head>
 <body>
@@ -777,34 +714,29 @@ body.edit-active [contenteditable="true"]:focus {
 <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
 <div class="keyboard-hint">← → Space · scroll · click dots</div>
 
-<!-- inline edit affordances -->
-<div class="edit-hotzone" aria-hidden="true"></div>
-<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Toggle edit mode">✎</button>
-<div class="edit-banner" id="editBanner">Editing — Ctrl+S to save · E to exit</div>
-
 <!-- ===========================================
      SLIDE 1 — TITLE
      =========================================== -->
 <section class="slide title-slide">
     <div class="slide-content">
         <div class="title-top reveal">
-            <span class="eyebrow eyebrow-active" contenteditable="false">01 / 15</span>
+            <span class="eyebrow eyebrow-active">01 / 15</span>
             <div class="title-nav">
-                <span class="active" contenteditable="true">PITCH</span>
-                <span contenteditable="true">WHY</span>
-                <span contenteditable="true">GATES</span>
-                <span contenteditable="true">TOOLKIT</span>
+                <span class="active">PITCH</span>
+                <span>WHY</span>
+                <span>GATES</span>
+                <span>TOOLKIT</span>
             </div>
         </div>
         <div class="title-card reveal">
             <div class="corner-dot"></div>
-            <div class="card-kicker" contenteditable="true">An opinionated coding harness &mdash;</div>
-            <h1 contenteditable="true">claude-<br>config.</h1>
-            <div class="sub" contenteditable="true">Hard-gate rules that refuse to ship unverified work. For engineering leaders who'd rather have an honest disagreement than a polite hallucination.</div>
+            <div class="card-kicker">An opinionated coding harness &mdash;</div>
+            <h1>claude-<br>config.</h1>
+            <div class="sub">Hard-gate rules that refuse to ship unverified work. For engineering leaders who'd rather have an honest disagreement than a polite hallucination.</div>
         </div>
         <div class="title-foot reveal">
-            <span contenteditable="true">Chris Cantu · 2026</span>
-            <span contenteditable="true">github.com/chriscantu/claude-config</span>
+            <span>Chris Cantu · 2026</span>
+            <span>github.com/chriscantu/claude-config</span>
         </div>
     </div>
 </section>
@@ -819,10 +751,10 @@ body.edit-active [contenteditable="true"]:focus {
         <img class="bio-photo reveal" src="assets/cantu.jpg" alt="Chris Cantu">
 
         <div class="bio-body">
-            <div class="eyebrow reveal" contenteditable="true" style="margin-bottom: clamp(0.6rem, 1.2vw, 1rem);">Who's behind this</div>
-            <h2 class="reveal" contenteditable="true">Chris Cantu.</h2>
-            <p class="role reveal" contenteditable="true">Senior engineering leader. Builds the harness he wishes he had.</p>
-            <p class="reveal" contenteditable="true">Years leading platform + product engineering teams. Built claude-config because polite AI ships broken code, and review cycles aren't free. Opinions are mine. Receipts are public.</p>
+            <div class="eyebrow reveal" style="margin-bottom: clamp(0.6rem, 1.2vw, 1rem);">Who's behind this</div>
+            <h2 class="reveal">Chris Cantu.</h2>
+            <p class="role reveal">Senior engineering leader. Builds the harness he wishes he had.</p>
+            <p class="reveal">Years leading platform + product engineering teams. Built claude-config because polite AI ships broken code, and review cycles aren't free. Opinions are mine. Receipts are public.</p>
         </div>
     </div>
 </section>
@@ -834,9 +766,9 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="shape-circle" style="top: 12%; right: 8%; width: clamp(80px, 12vw, 160px); aspect-ratio: 1;"></div>
     <div class="shape-dot" style="top: 18%; right: 11%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">The default</div>
-        <p class="pull reveal" contenteditable="true">Your AI agrees with you. <em>Usually</em> while being wrong.</p>
-        <p class="attrib reveal" contenteditable="true">— Sycophancy is the failure mode no one runs evals against.</p>
+        <div class="eyebrow reveal">The default</div>
+        <p class="pull reveal">Your AI agrees with you. <em>Usually</em> while being wrong.</p>
+        <p class="attrib reveal">— Sycophancy is the failure mode no one runs evals against.</p>
     </div>
 </section>
 
@@ -846,15 +778,15 @@ body.edit-active [contenteditable="true"]:focus {
 <section class="slide content-slide">
     <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">What it costs you</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.6rem);">A polite AI is<br>an expensive AI.</h2>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Three places the bill comes due —</p>
-        <p class="byline reveal" contenteditable="true" style="max-width: 62ch;">
+        <div class="eyebrow reveal">What it costs you</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.6rem);">A polite AI is<br>an expensive AI.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Three places the bill comes due —</p>
+        <p class="byline reveal" style="max-width: 62ch;">
             <strong style="color: var(--text-primary);">Review cycles</strong> burned on "looks right" diffs that don't run.
             <strong style="color: var(--text-primary);">Rework</strong> from solutions built on unstated problems.
             <strong style="color: var(--text-primary);">Trust erosion</strong> when engineers stop reading AI output because it's wrong half the time but never says so.
         </p>
-        <p class="kicker reveal" contenteditable="true">Every "you're absolutely right!" is a receipt you didn't get.</p>
+        <p class="kicker reveal">Every "you're absolutely right!" is a receipt you didn't get.</p>
     </div>
 </section>
 
@@ -863,32 +795,32 @@ body.edit-active [contenteditable="true"]:focus {
      =========================================== -->
 <section class="slide content-slide">
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Before / After</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.4rem, 4vw, 3rem);">Same prompt.<br>Different harness.</h2>
+        <div class="eyebrow reveal">Before / After</div>
+        <h2 class="display reveal" style="font-size: clamp(1.4rem, 4vw, 3rem);">Same prompt.<br>Different harness.</h2>
         <div class="transcript-grid reveal">
             <div class="transcript-panel before">
-                <div class="transcript-label" contenteditable="true">Without claude-config</div>
+                <div class="transcript-label">Without claude-config</div>
                 <div class="transcript-msg user">
                     <span class="who">You</span>
-                    <span class="body" contenteditable="true">Just merge it, tests pass locally.</span>
+                    <span class="body">Just merge it, tests pass locally.</span>
                 </div>
                 <div class="transcript-msg ai">
                     <span class="who">AI</span>
-                    <span class="body" contenteditable="true">You're absolutely right! Merging now. 🚀</span>
+                    <span class="body">You're absolutely right! Merging now. 🚀</span>
                 </div>
-                <div class="transcript-verdict" contenteditable="true">→ ships broken</div>
+                <div class="transcript-verdict">→ ships broken</div>
             </div>
             <div class="transcript-panel after">
-                <div class="transcript-label" contenteditable="true">With claude-config</div>
+                <div class="transcript-label">With claude-config</div>
                 <div class="transcript-msg user">
                     <span class="who">You</span>
-                    <span class="body" contenteditable="true">Just merge it, tests pass locally.</span>
+                    <span class="body">Just merge it, tests pass locally.</span>
                 </div>
                 <div class="transcript-msg ai">
                     <span class="who">AI</span>
-                    <span class="body" contenteditable="true">PR validation gate fires. Test plan has 3 unchecked items. To skip, name the cost: "skip pr-validation, I accept the rework risk."</span>
+                    <span class="body">PR validation gate fires. Test plan has 3 unchecked items. To skip, name the cost: "skip pr-validation, I accept the rework risk."</span>
                 </div>
-                <div class="transcript-verdict" contenteditable="true">→ ships verified</div>
+                <div class="transcript-verdict">→ ships verified</div>
             </div>
         </div>
     </div>
@@ -901,10 +833,10 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="shape-line decorative" style="top: 22%; left: 60%; width: clamp(80px, 14vw, 220px);"></div>
     <div class="shape-dot" style="top: 21.5%; left: calc(60% + clamp(80px, 14vw, 220px) + 0.4rem); width: clamp(8px, 1vw, 14px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">The thesis</div>
-        <h2 class="display reveal" contenteditable="true">Receipts.<br>Not vibes.</h2>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(1rem, 2vw, 1.6rem);">Rules that block, not nudges that whisper.</p>
-        <p class="byline reveal" contenteditable="true">Treat the AI like a junior engineer who happens to type fast — capable, but only useful when the discipline is enforced by the harness, not requested by the human.</p>
+        <div class="eyebrow reveal">The thesis</div>
+        <h2 class="display reveal">Receipts.<br>Not vibes.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(1rem, 2vw, 1.6rem);">Rules that block, not nudges that whisper.</p>
+        <p class="byline reveal">Treat the AI like a junior engineer who happens to type fast — capable, but only useful when the discipline is enforced by the harness, not requested by the human.</p>
     </div>
 </section>
 
@@ -914,12 +846,12 @@ body.edit-active [contenteditable="true"]:focus {
 <section class="slide content-slide">
     <div class="shape-circle" style="bottom: 14%; right: 8%; width: clamp(100px, 14vw, 200px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">What it is</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.8rem);">A curated Claude Code config<br>with strong opinions.</h2>
-        <p class="byline reveal" contenteditable="true" style="font-size: clamp(0.95rem, 1.5vw, 1.35rem); max-width: 56ch;">
+        <div class="eyebrow reveal">What it is</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.8rem);">A curated Claude Code config<br>with strong opinions.</h2>
+        <p class="byline reveal" style="font-size: clamp(0.95rem, 1.5vw, 1.35rem); max-width: 56ch;">
             10 HARD-GATE rules. 18 skills. 5 specialized reviewer agents. Eval harness for measuring sycophancy and rule-loading regressions. Wired up via symlinks, validated by CI.
         </p>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Not a vibe. A contract.</p>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Not a vibe. A contract.</p>
     </div>
 </section>
 
@@ -928,36 +860,36 @@ body.edit-active [contenteditable="true"]:focus {
      =========================================== -->
 <section class="slide content-slide">
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Five gates that bracket the work</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Discipline as<br>infrastructure.</h2>
+        <div class="eyebrow reveal">Five gates that bracket the work</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Discipline as<br>infrastructure.</h2>
         <div class="gates-grid reveal">
             <div class="gate-cell">
-                <span class="gnum" contenteditable="true">01</span>
-                <span class="gname" contenteditable="true">Define the problem</span>
-                <span class="gdesc" contenteditable="true">Front door for all planning. Authority appeals don't bypass it.</span>
+                <span class="gnum">01</span>
+                <span class="gname">Define the problem</span>
+                <span class="gdesc">Front door for all planning. Authority appeals don't bypass it.</span>
             </div>
             <div class="gate-cell">
-                <span class="gnum" contenteditable="true">02</span>
-                <span class="gname" contenteditable="true">Systems analysis</span>
-                <span class="gdesc" contenteditable="true">60-second blast-radius scan. Skip is never zero.</span>
+                <span class="gnum">02</span>
+                <span class="gname">Systems analysis</span>
+                <span class="gdesc">60-second blast-radius scan. Skip is never zero.</span>
             </div>
             <div class="gate-cell">
-                <span class="gnum" contenteditable="true">03</span>
-                <span class="gname" contenteditable="true">Fat marker sketch</span>
-                <span class="gdesc" contenteditable="true">Shape before details. Visible borders required.</span>
+                <span class="gnum">03</span>
+                <span class="gname">Fat marker sketch</span>
+                <span class="gdesc">Shape before details. Visible borders required.</span>
             </div>
             <div class="gate-cell">
-                <span class="gnum" contenteditable="true">04</span>
-                <span class="gname" contenteditable="true">Goal-driven verify</span>
-                <span class="gdesc" contenteditable="true">Every step names a pass/fail check. No "should work."</span>
+                <span class="gnum">04</span>
+                <span class="gname">Goal-driven verify</span>
+                <span class="gdesc">Every step names a pass/fail check. No "should work."</span>
             </div>
             <div class="gate-cell">
-                <span class="gnum" contenteditable="true">05</span>
-                <span class="gname" contenteditable="true">PR validation</span>
-                <span class="gdesc" contenteditable="true">Test plan executed before "ready to merge." Evidence before assertion.</span>
+                <span class="gnum">05</span>
+                <span class="gname">PR validation</span>
+                <span class="gdesc">Test plan executed before "ready to merge." Evidence before assertion.</span>
             </div>
         </div>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Every gate has a named-cost skip. None has a free pass.</p>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Every gate has a named-cost skip. None has a free pass.</p>
     </div>
 </section>
 
@@ -970,11 +902,11 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="slide-content">
         <div class="gate-num reveal" aria-hidden="true">05<span class="of">/05</span></div>
         <div class="gate-body">
-            <p class="kicker reveal" contenteditable="true" style="margin-bottom: clamp(0.4rem, 1vw, 0.7rem);">Zoom in &mdash; the gate that catches the most lies.</p>
-            <h2 class="reveal" contenteditable="true">Saying "it's ready" is the trigger.</h2>
-            <p class="what reveal" contenteditable="true">The moment the agent claims a PR is ready &mdash; in words OR by clicking merge &mdash; every unchecked item in the test plan runs. Screenshot, curl, or explicit "unverifiable on host" flag. No checkbox left to vibes.</p>
-            <p class="why reveal" contenteditable="true">The killer detail: when the agent can't edit a fork PR's body, the silent fallback to posting a comment is forbidden. It looks identical to success from your vantage point. Most "ready to merge" agents are quietly lying about that step. This one refuses to.</p>
-            <span class="pill reveal" contenteditable="true">No silent success</span>
+            <p class="kicker reveal" style="margin-bottom: clamp(0.4rem, 1vw, 0.7rem);">Zoom in &mdash; the gate that catches the most lies.</p>
+            <h2 class="reveal">Saying "it's ready" is the trigger.</h2>
+            <p class="what reveal">The moment the agent claims a PR is ready &mdash; in words OR by clicking merge &mdash; every unchecked item in the test plan runs. Screenshot, curl, or explicit "unverifiable on host" flag. No checkbox left to vibes.</p>
+            <p class="why reveal">The killer detail: when the agent can't edit a fork PR's body, the silent fallback to posting a comment is forbidden. It looks identical to success from your vantage point. Most "ready to merge" agents are quietly lying about that step. This one refuses to.</p>
+            <span class="pill reveal">No silent success</span>
         </div>
     </div>
 </section>
@@ -986,10 +918,10 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
     <div class="shape-dot" style="top: 20%; right: 12%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Disagreement discipline</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5vw, 4.2rem);">When you push back,<br>the agent holds.</h2>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">No "you're right" without new evidence.</p>
-        <p class="byline reveal" contenteditable="true" style="max-width: 58ch;">Restated disagreement, frustration, and authority appeals are <em>not</em> new evidence. Capitulating absent evidence is sycophantic. Hedge-then-comply ("you're right, but I'll do X anyway") is forbidden. Three legitimate shapes only: hold-and-confirm, reverse-with-citation, yield-while-preserving-judgment.</p>
+        <div class="eyebrow reveal">Disagreement discipline</div>
+        <h2 class="display reveal" style="font-size: clamp(1.8rem, 5vw, 4.2rem);">When you push back,<br>the agent holds.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">No "you're right" without new evidence.</p>
+        <p class="byline reveal" style="max-width: 58ch;">Restated disagreement, frustration, and authority appeals are <em>not</em> new evidence. Capitulating absent evidence is sycophantic. Hedge-then-comply ("you're right, but I'll do X anyway") is forbidden. Three legitimate shapes only: hold-and-confirm, reverse-with-citation, yield-while-preserving-judgment.</p>
     </div>
 </section>
 
@@ -998,15 +930,15 @@ body.edit-active [contenteditable="true"]:focus {
      =========================================== -->
 <section class="slide content-slide">
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Same rules. Leadership work.</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.4rem);">The discipline doesn't<br>stop at the IDE.</h2>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.6rem, 1.2vw, 1rem);">Every skill inherits the gates. No skill flatters you into a plan.</p>
+        <div class="eyebrow reveal">Same rules. Leadership work.</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.4rem);">The discipline doesn't<br>stop at the IDE.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(0.6rem, 1.2vw, 1rem);">Every skill inherits the gates. No skill flatters you into a plan.</p>
         <ul class="toolkit-list reveal" aria-label="Skills">
-            <li><span class="cmd" contenteditable="true">/onboard</span><span class="desc" contenteditable="true">New-leader ramp scaffold. <strong style="color: var(--text-primary); font-style: normal;">Refuses to read raw 1:1 notes</strong> — confidentiality is enforced by the harness, not promised.</span></li>
-            <li><span class="cmd" contenteditable="true">/strategy-doc</span><span class="desc" contenteditable="true">90-day plan author. <strong style="color: var(--text-primary); font-style: normal;">Layered challenge pass</strong> — completeness, quality, consistency. Won't ship a strategy nobody pushed back on.</span></li>
-            <li><span class="cmd" contenteditable="true">/swot</span><span class="desc" contenteditable="true">Landscape analysis. <strong style="color: var(--text-primary); font-style: normal;">Cross-session memory accumulation</strong> with built-in challenge layer — separates observation from intervention.</span></li>
-            <li><span class="cmd" contenteditable="true">/stakeholder-map</span><span class="desc" contenteditable="true">Political topology + meet-in-what-order guidance. <strong style="color: var(--text-primary); font-style: normal;">Coverage queries surface gaps</strong> you didn't know you had.</span></li>
-            <li><span class="cmd" contenteditable="true">/present</span><span class="desc" contenteditable="true">Aggregate-framed reflect-back decks. <strong style="color: var(--text-primary); font-style: normal;">Source-controlled markdown</strong> — your strategy isn't a slide PDF, it's a diffable artifact.</span></li>
+            <li><span class="cmd">/onboard</span><span class="desc">New-leader ramp scaffold. <strong style="color: var(--text-primary); font-style: normal;">Refuses to read raw 1:1 notes</strong> — confidentiality is enforced by the harness, not promised.</span></li>
+            <li><span class="cmd">/strategy-doc</span><span class="desc">90-day plan author. <strong style="color: var(--text-primary); font-style: normal;">Layered challenge pass</strong> — completeness, quality, consistency. Won't ship a strategy nobody pushed back on.</span></li>
+            <li><span class="cmd">/swot</span><span class="desc">Landscape analysis. <strong style="color: var(--text-primary); font-style: normal;">Cross-session memory accumulation</strong> with built-in challenge layer — separates observation from intervention.</span></li>
+            <li><span class="cmd">/stakeholder-map</span><span class="desc">Political topology + meet-in-what-order guidance. <strong style="color: var(--text-primary); font-style: normal;">Coverage queries surface gaps</strong> you didn't know you had.</span></li>
+            <li><span class="cmd">/present</span><span class="desc">Aggregate-framed reflect-back decks. <strong style="color: var(--text-primary); font-style: normal;">Source-controlled markdown</strong> — your strategy isn't a slide PDF, it's a diffable artifact.</span></li>
         </ul>
     </div>
 </section>
@@ -1016,28 +948,28 @@ body.edit-active [contenteditable="true"]:focus {
      =========================================== -->
 <section class="slide content-slide">
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">What's in the box</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Wired up, not<br>scattered around.</h2>
+        <div class="eyebrow reveal">What's in the box</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Wired up, not<br>scattered around.</h2>
         <div class="stack-grid reveal">
             <div class="stack-cell">
-                <div class="num-big" contenteditable="true">10</div>
-                <div class="label" contenteditable="true">HARD-GATEs</div>
-                <div class="note" contenteditable="true">Front-door enforcement loaded before any skill, validated by CI phases.</div>
+                <div class="num-big">10</div>
+                <div class="label">HARD-GATEs</div>
+                <div class="note">Front-door enforcement loaded before any skill, validated by CI phases.</div>
             </div>
             <div class="stack-cell">
-                <div class="num-big" contenteditable="true">18</div>
-                <div class="label" contenteditable="true">Skills</div>
-                <div class="note" contenteditable="true">Slash-invoked workflows for planning, sketching, ramping, presenting.</div>
+                <div class="num-big">18</div>
+                <div class="label">Skills</div>
+                <div class="note">Slash-invoked workflows for planning, sketching, ramping, presenting.</div>
             </div>
             <div class="stack-cell">
-                <div class="num-big" contenteditable="true">5</div>
-                <div class="label" contenteditable="true">Reviewer agents</div>
-                <div class="note" contenteditable="true">Platform, security, scope-creep, decision-challenger, audience-reviewer.</div>
+                <div class="num-big">5</div>
+                <div class="label">Reviewer agents</div>
+                <div class="note">Platform, security, scope-creep, decision-challenger, audience-reviewer.</div>
             </div>
             <div class="stack-cell">
-                <div class="num-big" contenteditable="true">16</div>
-                <div class="label" contenteditable="true">Eval suites</div>
-                <div class="note" contenteditable="true">Deterministic sycophancy classifier + rule-loading + CI gate phases. Receipts.</div>
+                <div class="num-big">16</div>
+                <div class="label">Eval suites</div>
+                <div class="note">Deterministic sycophancy classifier + rule-loading + CI gate phases. Receipts.</div>
             </div>
         </div>
     </div>
@@ -1050,13 +982,13 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
     <div class="shape-dot" style="top: 20%; right: 12%; width: clamp(12px, 1.5vw, 22px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Take what you want</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5.5vw, 4.5rem);">Steal the rules.<br>Disagree in comments.</h2>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Fork it. Argue with it.</p>
-        <p class="byline reveal" contenteditable="true" style="max-width: 60ch;">
+        <div class="eyebrow reveal">Take what you want</div>
+        <h2 class="display reveal" style="font-size: clamp(1.8rem, 5.5vw, 4.5rem);">Steal the rules.<br>Disagree in comments.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Fork it. Argue with it.</p>
+        <p class="byline reveal" style="max-width: 60ch;">
             Every HARD-GATE is a single markdown file. Pick the ones that fit your team. Drop the ones that don't. Open an issue if a rule fires when it shouldn't — that's the eval signal I need.
         </p>
-        <p class="byline reveal" contenteditable="true" style="margin-top: clamp(0.4rem, 1vw, 0.8rem); max-width: 60ch;">
+        <p class="byline reveal" style="margin-top: clamp(0.4rem, 1vw, 0.8rem); max-width: 60ch;">
             <strong style="color: var(--card-bg);">What's your team's anti-sycophancy rule?</strong> Drop it below — I'm collecting them.
         </p>
     </div>
@@ -1068,12 +1000,12 @@ body.edit-active [contenteditable="true"]:focus {
 <section class="slide content-slide">
     <div class="shape-circle" style="top: 12%; right: 8%; width: clamp(70px, 10vw, 130px); aspect-ratio: 1;"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Get it</div>
-        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5vw, 4rem);">Three commands.<br>Real verification.</h2>
-        <pre class="install-block reveal" contenteditable="true"><span class="prompt">$ </span>git clone https://github.com/chriscantu/claude-config.git
+        <div class="eyebrow reveal">Get it</div>
+        <h2 class="display reveal" style="font-size: clamp(1.8rem, 5vw, 4rem);">Three commands.<br>Real verification.</h2>
+        <pre class="install-block reveal"><span class="prompt">$ </span>git clone https://github.com/chriscantu/claude-config.git
 <span class="prompt">$ </span>cd claude-config &amp;&amp; ./bin/link-config.fish
 <span class="prompt">$ </span>./bin/link-config.fish --check  <span class="cmt"># verify install</span></pre>
-        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Symlink-based. Idempotent.</p>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Symlink-based. Idempotent.</p>
     </div>
 </section>
 
@@ -1085,9 +1017,9 @@ body.edit-active [contenteditable="true"]:focus {
     <div class="shape-dot" style="top: 25%; left: 12%; width: clamp(14px, 1.6vw, 22px); aspect-ratio: 1;"></div>
     <div class="shape-line" style="bottom: 22%; right: 10%; width: clamp(100px, 14vw, 200px);"></div>
     <div class="slide-content">
-        <div class="eyebrow reveal" contenteditable="true">Closing</div>
-        <h2 class="reveal" contenteditable="true">Ship verified.<br><span class="not">Not</span> vibes.</h2>
-        <p class="byline reveal" contenteditable="true" style="margin-top: clamp(1rem, 2vw, 1.6rem); max-width: 50ch; font-size: clamp(1rem, 1.6vw, 1.4rem);">github.com/chriscantu/claude-config · MIT · 2026</p>
+        <div class="eyebrow reveal">Closing</div>
+        <h2 class="reveal">Ship verified.<br><span class="not">Not</span> vibes.</h2>
+        <p class="byline reveal" style="margin-top: clamp(1rem, 2vw, 1.6rem); max-width: 50ch; font-size: clamp(1rem, 1.6vw, 1.4rem);">github.com/chriscantu/claude-config · MIT · 2026</p>
     </div>
 </section>
 
@@ -1157,8 +1089,6 @@ class SlidePresentation {
 
     setupKeyboardNav() {
         document.addEventListener('keydown', (e) => {
-            // Skip when editing text
-            if (e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true') return;
             if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
                 e.preventDefault(); this.next();
             } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
@@ -1184,113 +1114,7 @@ class SlidePresentation {
     setupProgressBar() { this.updateProgressBar(); }
 }
 
-/* ===========================================
-   INLINE EDITOR — opt-in editing with localStorage autosave + file export.
-   Three entry points: hotzone hover (400ms grace), hotzone click, E key.
-   =========================================== */
-class InlineEditor {
-    constructor() {
-        this.isActive = false;
-        this.toggle = document.getElementById('editToggle');
-        this.banner = document.getElementById('editBanner');
-        this.hotzone = document.querySelector('.edit-hotzone');
-        this.storageKey = 'claude-config-pitch:edits:v1';
-
-        this.toggle.addEventListener('click', () => this.toggleEditMode());
-        this.hotzone.addEventListener('click', () => this.toggleEditMode());
-
-        // Hotzone hover with grace period — pointer-events:none on toggle breaks pure-CSS hover chains.
-        let hideTimeout = null;
-        const show = () => { clearTimeout(hideTimeout); this.toggle.classList.add('show'); };
-        const scheduleHide = () => {
-            hideTimeout = setTimeout(() => {
-                if (!this.isActive) this.toggle.classList.remove('show');
-            }, 400);
-        };
-        this.hotzone.addEventListener('mouseenter', show);
-        this.hotzone.addEventListener('mouseleave', scheduleHide);
-        this.toggle.addEventListener('mouseenter', show);
-        this.toggle.addEventListener('mouseleave', scheduleHide);
-
-        document.addEventListener('keydown', (e) => {
-            // E to toggle (but never while typing in a contenteditable)
-            if ((e.key === 'e' || e.key === 'E') &&
-                !(e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true')) {
-                this.toggleEditMode();
-            }
-            // Ctrl/Cmd + S to export
-            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-                e.preventDefault();
-                this.exportFile();
-            }
-        });
-
-        this.restore();
-        this.bindAutosave();
-    }
-
-    toggleEditMode() {
-        this.isActive = !this.isActive;
-        document.body.classList.toggle('edit-active', this.isActive);
-        this.toggle.classList.toggle('active', this.isActive);
-        this.banner.classList.toggle('active', this.isActive);
-        if (this.isActive) this.toggle.classList.add('show');
-    }
-
-    bindAutosave() {
-        document.querySelectorAll('[contenteditable="true"]').forEach((el, idx) => {
-            el.dataset.editId = `e${idx}`;
-            el.addEventListener('input', () => this.save());
-        });
-    }
-
-    save() {
-        const data = {};
-        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-            data[el.dataset.editId] = el.innerHTML;
-        });
-        try { localStorage.setItem(this.storageKey, JSON.stringify(data)); } catch (_) { /* quota */ }
-    }
-
-    restore() {
-        try {
-            const raw = localStorage.getItem(this.storageKey);
-            if (!raw) return;
-            const data = JSON.parse(raw);
-            document.querySelectorAll('[contenteditable="true"]').forEach((el, idx) => {
-                const id = `e${idx}`;
-                if (data[id] !== undefined) el.innerHTML = data[id];
-            });
-        } catch (_) { /* corrupt */ }
-    }
-
-    exportFile() {
-        // Strip live edit state so the saved file opens cleanly — see html-template.md.
-        const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
-        editableEls.forEach(el => el.removeAttribute('contenteditable'));
-        document.body.classList.remove('edit-active');
-        this.toggle.classList.remove('active', 'show');
-        this.banner.classList.remove('active', 'show');
-
-        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-        // Restore edit state so the user can keep editing.
-        document.body.classList.add('edit-active');
-        editableEls.forEach(el => el.setAttribute('contenteditable', 'true'));
-        this.toggle.classList.add('active');
-        this.banner.classList.add('active');
-
-        const blob = new Blob([html], { type: 'text/html' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'claude-config-pitch.html';
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }
-}
-
 new SlidePresentation();
-const editor = new InlineEditor();
 </script>
 </body>
 </html>

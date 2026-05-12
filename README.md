@@ -18,10 +18,6 @@ open index.html
 - Scroll or swipe
 - Click navigation dots
 
-## Edit in browser
-
-Hover the top-left corner or press `E` to enter edit mode. Click any text to edit. `Ctrl+S` exports a clean file. Edits auto-save to `localStorage`.
-
 ## License
 
 MIT
