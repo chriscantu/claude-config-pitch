@@ -302,8 +302,13 @@ h1.display, h2.display {
     letter-spacing: 0.18em;
     text-transform: uppercase;
 }
-.title-nav span { color: var(--text-faint); }
-.title-nav .active { color: var(--text-primary); }
+.title-nav a {
+    color: var(--text-faint);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.title-nav a:hover, .title-nav a:focus { color: var(--card-bg); outline: none; }
+.title-nav a.active { color: var(--text-primary); }
 .title-card {
     background: var(--card-bg);
     color: var(--text-on-card);
@@ -717,16 +722,16 @@ h1.display, h2.display {
 <!-- ===========================================
      SLIDE 1 — TITLE
      =========================================== -->
-<section class="slide title-slide">
+<section class="slide title-slide" id="sec-pitch">
     <div class="slide-content">
         <div class="title-top reveal">
             <span class="eyebrow eyebrow-active">01 / 15</span>
-            <div class="title-nav">
-                <span class="active">PITCH</span>
-                <span>WHY</span>
-                <span>GATES</span>
-                <span>TOOLKIT</span>
-            </div>
+            <nav class="title-nav" aria-label="Section jump">
+                <a href="#sec-pitch" class="active">PITCH</a>
+                <a href="#sec-why">WHY</a>
+                <a href="#sec-gates">GATES</a>
+                <a href="#sec-toolkit">TOOLKIT</a>
+            </nav>
         </div>
         <div class="title-card reveal">
             <div class="corner-dot"></div>
@@ -762,7 +767,7 @@ h1.display, h2.display {
 <!-- ===========================================
      SLIDE 3 — THE DEFAULT (problem)
      =========================================== -->
-<section class="slide quote-slide">
+<section class="slide quote-slide" id="sec-why">
     <div class="shape-circle" style="top: 12%; right: 8%; width: clamp(80px, 12vw, 160px); aspect-ratio: 1;"></div>
     <div class="shape-dot" style="top: 18%; right: 11%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
     <div class="slide-content">
@@ -858,7 +863,7 @@ h1.display, h2.display {
 <!-- ===========================================
      SLIDE 8 — FIVE GATES OVERVIEW
      =========================================== -->
-<section class="slide content-slide">
+<section class="slide content-slide" id="sec-gates">
     <div class="slide-content">
         <div class="eyebrow reveal">Five gates that bracket the work</div>
         <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Discipline as<br>infrastructure.</h2>
@@ -928,7 +933,7 @@ h1.display, h2.display {
 <!-- ===========================================
      SLIDE 11 — SENIOR LEADER TOOLKIT
      =========================================== -->
-<section class="slide content-slide">
+<section class="slide content-slide" id="sec-toolkit">
     <div class="slide-content">
         <div class="eyebrow reveal">Same rules. Leadership work.</div>
         <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.4rem);">The discipline doesn't<br>stop at the IDE.</h2>
