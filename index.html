@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>claude-config — Stop being nice to your AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Fraunces:ital,opsz,wght@1,9..144,500;1,9..144,700;1,9..144,900&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   THEME — Bold Signal base + Fraunces italic kickers
+   Change variables here to retheme the whole deck.
+   =========================================== */
+:root {
+    --bg-primary: #1a1a1a;
+    --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    --card-bg: #FF5722;
+    --card-accent: #ffb38a;
+    --text-primary: #ffffff;
+    --text-muted: rgba(255,255,255,0.55);
+    --text-faint: rgba(255,255,255,0.3);
+    --text-on-card: #1a1a1a;
+    --accent-line: #FF5722;
+    --ink-dot: #FF5722;
+
+    --font-display: 'Archivo Black', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-italic: 'Fraunces', serif;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-normal: 0.7s;
+}
+
+/* ===========================================
+   BASE
+   =========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   VIEWPORT FITTING — paste of viewport-base.css
+   =========================================== */
+html, body { height: 100%; overflow-x: hidden; }
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--bg-gradient);
+}
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    overflow: hidden;
+    padding: var(--slide-padding);
+    position: relative;
+    z-index: 2;
+}
+:root {
+    --title-size: clamp(1.5rem, 5vw, 4rem);
+    --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+    --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+    --body-size: clamp(0.95rem, 1.8vw, 1.4rem);
+    --small-size: clamp(0.8rem, 1.2vw, 1.05rem);
+    --slide-padding: clamp(1.25rem, 4vw, 4rem);
+    --content-gap: clamp(0.5rem, 2vw, 2rem);
+    --element-gap: clamp(0.25rem, 1vw, 1rem);
+}
+.card, .container, .content-box {
+    max-width: min(90vw, 1100px);
+    max-height: min(82vh, 720px);
+}
+.feature-list, .bullet-list { gap: clamp(0.4rem, 1vh, 1rem); }
+.feature-list li, .bullet-list li { font-size: var(--body-size); line-height: 1.45; }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+img, .image-container {
+    max-width: 100%;
+    max-height: min(50vh, 400px);
+    object-fit: contain;
+}
+@media (max-height: 700px) {
+    :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+    }
+}
+@media (max-height: 600px) {
+    :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+        --title-size: clamp(1.1rem, 4vw, 2rem);
+        --body-size: clamp(0.85rem, 1.4vw, 1.15rem);
+    }
+    .nav-dots, .keyboard-hint, .decorative { display: none; }
+}
+@media (max-height: 500px) {
+    :root {
+        --slide-padding: clamp(0.4rem, 2vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.8rem, 1.2vw, 1rem);
+    }
+}
+@media (max-width: 600px) {
+    :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+    .grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* ===========================================
+   REVEAL ANIMATIONS — triggered by IntersectionObserver
+   =========================================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+}
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.05s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.18s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.30s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.42s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: 0.54s; }
+.slide.visible .reveal:nth-child(6) { transition-delay: 0.66s; }
+
+.reveal-blur {
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.8s var(--ease-out-expo), filter 0.8s var(--ease-out-expo);
+}
+.slide.visible .reveal-blur { opacity: 1; filter: blur(0); }
+
+/* ===========================================
+   GEOMETRIC ACCENTS (from Vintage Editorial)
+   Circle outline + line + dot — used decoratively per slide.
+   =========================================== */
+.shape-circle {
+    position: absolute;
+    border: 2px solid var(--text-faint);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.shape-line {
+    position: absolute;
+    height: 2px;
+    background: var(--text-faint);
+    transform-origin: left center;
+    pointer-events: none;
+}
+.shape-dot {
+    position: absolute;
+    background: var(--ink-dot);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.slide.visible .shape-circle { animation: drawCircle 1.2s var(--ease-out-expo) 0.3s backwards; }
+.slide.visible .shape-line { animation: drawLine 0.7s var(--ease-out-expo) 0.5s backwards; }
+.slide.visible .shape-dot { animation: pop 0.5s cubic-bezier(.4,1.5,.6,1) 0.8s backwards; }
+
+@keyframes drawCircle { from { opacity: 0; transform: scale(0.5) rotate(-30deg); } to { opacity: 1; transform: none; } }
+@keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pop { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: scale(1); } }
+
+/* ===========================================
+   TYPOGRAPHY
+   =========================================== */
+h1.display, h2.display {
+    font-family: var(--font-display);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+.kicker {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--card-accent);
+    font-size: clamp(1.15rem, 1.9vw, 1.75rem);
+    margin-bottom: clamp(0.6rem, 1.4vw, 1.2rem);
+    letter-spacing: -0.01em;
+}
+.eyebrow {
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 1.1vw, 1.05rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ===========================================
+   PERSISTENT CHROME — slide number, nav-dots, progress
+   =========================================== */
+.chrome-num {
+    position: fixed;
+    top: clamp(1rem, 2vh, 2rem);
+    left: clamp(1rem, 2vw, 2rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 1vw, 0.95rem);
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    z-index: 100;
+    pointer-events: none;
+}
+.chrome-brand {
+    position: fixed;
+    top: clamp(1rem, 2vh, 2rem);
+    right: clamp(1rem, 2vw, 2rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 1vw, 0.95rem);
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    z-index: 100;
+    pointer-events: none;
+}
+.progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--card-bg);
+    z-index: 200;
+    transition: width 0.3s ease;
+}
+.nav-dots {
+    position: fixed;
+    right: clamp(0.75rem, 1.5vw, 1.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.4rem, 0.9vw, 0.8rem);
+    z-index: 100;
+}
+.nav-dots button {
+    width: clamp(7px, 0.7vw, 10px);
+    height: clamp(7px, 0.7vw, 10px);
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s, transform 0.2s;
+}
+.nav-dots button.active { background: var(--card-bg); border-color: var(--card-bg); transform: scale(1.4); }
+.nav-dots button:hover { border-color: var(--card-bg); }
+.keyboard-hint {
+    position: fixed;
+    bottom: clamp(1rem, 2vh, 1.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.6rem, 0.85vw, 0.8rem);
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* ===========================================
+   SLIDE 1 — TITLE
+   Hero card on dark gradient, italic kicker, dot accent.
+   =========================================== */
+.title-slide .slide-content {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(1rem, 2vw, 2rem);
+}
+.title-top {
+    display: flex; justify-content: space-between; align-items: center;
+}
+.title-top .eyebrow-active { color: var(--text-primary); }
+.title-nav {
+    display: flex; gap: clamp(0.5rem, 1.5vw, 1.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.6rem, 0.85vw, 0.85rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+.title-nav span { color: var(--text-faint); }
+.title-nav .active { color: var(--text-primary); }
+.title-card {
+    background: var(--card-bg);
+    color: var(--text-on-card);
+    border-radius: clamp(8px, 1vw, 16px);
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+}
+.title-card .card-kicker {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(0.9rem, 1.5vw, 1.4rem);
+    margin-bottom: clamp(0.5rem, 1.3vw, 1rem);
+    opacity: 0.85;
+}
+.title-card h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 9vw, 7.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+}
+.title-card .sub {
+    margin-top: clamp(0.8rem, 1.8vw, 1.4rem);
+    font-size: clamp(0.95rem, 1.5vw, 1.4rem);
+    font-weight: 500;
+    max-width: 36ch;
+    line-height: 1.4;
+}
+.title-card .corner-dot {
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 2rem);
+    right: clamp(1rem, 2.5vw, 2rem);
+    width: clamp(14px, 1.5vw, 22px);
+    aspect-ratio: 1;
+    background: var(--text-on-card);
+    border-radius: 50%;
+}
+.title-foot {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(0.75rem, 1vw, 1rem);
+    color: var(--text-muted);
+}
+
+/* ===========================================
+   CONTENT SLIDE — generic two-column / centered
+   =========================================== */
+.content-slide .slide-content { gap: var(--content-gap); }
+.content-slide h2.display {
+    font-size: clamp(2rem, 6.5vw, 5.5rem);
+    max-width: 18ch;
+}
+.lede {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.5vw, 2.4rem);
+    line-height: 1.2;
+    max-width: 22ch;
+    color: var(--text-primary);
+}
+.byline {
+    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+    color: var(--text-muted);
+    max-width: 56ch;
+    line-height: 1.55;
+}
+
+/* ===========================================
+   QUOTE SLIDE — pull quote with attribution
+   =========================================== */
+.quote-slide .slide-content { justify-content: center; align-items: flex-start; }
+.quote-slide .pull {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.6rem, 4.5vw, 4rem);
+    line-height: 1.15;
+    max-width: 20ch;
+    letter-spacing: -0.01em;
+}
+.quote-slide .pull em {
+    color: var(--card-bg);
+    font-style: italic;
+}
+.quote-slide .attrib {
+    margin-top: clamp(1rem, 2vw, 1.8rem);
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* ===========================================
+   GATE SLIDE — HARD-GATE feature
+   Side card layout, italic kicker, number badge.
+   =========================================== */
+.gate-slide .slide-content {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(1rem, 3vw, 3rem);
+    align-items: center;
+}
+.gate-num {
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 13vw, 11rem);
+    color: var(--card-bg);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+}
+.gate-num .of {
+    font-family: var(--font-italic);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.4em;
+    vertical-align: super;
+    margin-left: 0.2em;
+}
+.gate-body h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 3.2rem);
+    line-height: 0.95;
+    margin-bottom: clamp(0.6rem, 1.4vw, 1.1rem);
+    max-width: 14ch;
+}
+.gate-body .what {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(1.15rem, 1.9vw, 1.7rem);
+    color: var(--card-accent);
+    margin-bottom: clamp(0.8rem, 1.6vw, 1.3rem);
+    max-width: 32ch;
+    line-height: 1.35;
+}
+.gate-body .why {
+    font-size: clamp(1rem, 1.55vw, 1.35rem);
+    color: var(--text-muted);
+    max-width: 42ch;
+    line-height: 1.55;
+    margin-bottom: clamp(0.6rem, 1.2vw, 1rem);
+}
+.gate-body .pill {
+    display: inline-block;
+    background: var(--card-bg);
+    color: var(--text-on-card);
+    padding: clamp(0.35rem, 0.9vw, 0.6rem) clamp(0.8rem, 1.5vw, 1.2rem);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: clamp(0.6rem, 0.85vw, 0.8rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+@media (max-width: 760px) {
+    .gate-slide .slide-content { grid-template-columns: 1fr; }
+    .gate-num { font-size: clamp(3rem, 18vw, 6rem); }
+}
+
+/* ===========================================
+   STACK / GRID SLIDE — what's in the box
+   =========================================== */
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(0.6rem, 1.5vw, 1.5rem);
+    margin-top: clamp(0.8rem, 2vw, 2rem);
+}
+.stack-cell {
+    border: 1px solid var(--text-faint);
+    padding: clamp(0.8rem, 1.8vw, 1.5rem);
+    border-radius: clamp(6px, 0.8vw, 12px);
+    background: rgba(255,255,255,0.02);
+}
+.stack-cell .num-big {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+    color: var(--card-bg);
+    line-height: 1;
+    margin-bottom: clamp(0.4rem, 0.9vw, 0.7rem);
+}
+.stack-cell .label {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+    color: var(--text-primary);
+    margin-bottom: clamp(0.25rem, 0.6vw, 0.4rem);
+}
+.stack-cell .note {
+    font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+@media (max-width: 760px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===========================================
+   TOOLKIT SLIDE — skill list with italic descriptions
+   =========================================== */
+.toolkit-list {
+    display: flex; flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+    max-width: 60ch;
+    margin-top: clamp(0.6rem, 1.2vw, 1rem);
+}
+.toolkit-list li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: clamp(7rem, 14vw, 11rem) 1fr;
+    gap: clamp(0.6rem, 1.5vw, 1.2rem);
+    align-items: baseline;
+    padding-bottom: clamp(0.4rem, 0.8vw, 0.7rem);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.toolkit-list .cmd {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.5vw, 1.4rem);
+    color: var(--card-bg);
+    letter-spacing: -0.01em;
+}
+.toolkit-list .desc {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+/* ===========================================
+   TRANSCRIPT SLIDE — before/after side-by-side
+   =========================================== */
+.transcript-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.8rem, 2vw, 2rem);
+    margin-top: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+.transcript-panel {
+    border: 1px solid var(--text-faint);
+    border-radius: clamp(8px, 1vw, 14px);
+    padding: clamp(0.9rem, 2vw, 1.6rem);
+    background: rgba(255,255,255,0.025);
+    display: flex; flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 0.9rem);
+}
+.transcript-panel.after { border-color: var(--card-bg); }
+.transcript-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.transcript-panel.after .transcript-label { color: var(--card-bg); }
+.transcript-msg {
+    display: grid;
+    grid-template-columns: clamp(2.5rem, 4vw, 3.5rem) 1fr;
+    gap: clamp(0.4rem, 0.8vw, 0.7rem);
+    align-items: baseline;
+}
+.transcript-msg .who {
+    font-family: var(--font-display);
+    font-size: clamp(0.65rem, 0.9vw, 0.85rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.transcript-msg .body {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(0.95rem, 1.35vw, 1.2rem);
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+.transcript-msg.user .body { font-style: normal; font-family: var(--font-body); color: var(--text-muted); }
+.transcript-verdict {
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 1.1vw, 1rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-top: clamp(0.4rem, 0.9vw, 0.7rem);
+    border-top: 1px solid var(--text-faint);
+    color: var(--text-faint);
+}
+.transcript-panel.after .transcript-verdict { color: var(--card-bg); border-color: var(--card-bg); }
+@media (max-width: 760px) { .transcript-grid { grid-template-columns: 1fr; } }
+
+/* ===========================================
+   WHO I AM
+   =========================================== */
+.bio-slide .slide-content {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: clamp(1rem, 3vw, 3rem);
+    align-items: center;
+}
+.bio-photo {
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: min(28vw, 320px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--card-bg);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    background: var(--card-bg);
+}
+.bio-body h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    line-height: 0.95;
+    margin-bottom: clamp(0.6rem, 1.3vw, 1rem);
+}
+.bio-body .role {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.6vw, 1.5rem);
+    color: var(--card-accent);
+    margin-bottom: clamp(0.6rem, 1.3vw, 1rem);
+}
+.bio-body p { font-size: clamp(0.95rem, 1.4vw, 1.25rem); color: var(--text-muted); line-height: 1.55; max-width: 50ch; }
+@media (max-width: 760px) {
+    .bio-slide .slide-content { grid-template-columns: 1fr; }
+    .bio-photo { max-width: min(40vw, 220px); }
+}
+
+/* ===========================================
+   GATES OVERVIEW — five gates on one slide
+   =========================================== */
+.gates-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: clamp(0.6rem, 1.4vw, 1.2rem);
+    margin-top: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+.gate-cell {
+    border-top: 3px solid var(--card-bg);
+    padding-top: clamp(0.6rem, 1.2vw, 1rem);
+    display: flex; flex-direction: column;
+    gap: clamp(0.3rem, 0.7vw, 0.6rem);
+}
+.gate-cell .gnum {
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 0.95vw, 0.9rem);
+    letter-spacing: 0.2em;
+    color: var(--card-bg);
+}
+.gate-cell .gname {
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+.gate-cell .gdesc {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+@media (max-width: 900px) {
+    .gates-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===========================================
+   CODE / CTA — install snippet
+   =========================================== */
+.install-block {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--text-faint);
+    border-radius: clamp(8px, 1vw, 14px);
+    padding: clamp(1rem, 2.5vw, 2rem);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: clamp(0.75rem, 1.1vw, 1rem);
+    line-height: 1.7;
+    color: var(--card-accent);
+    max-width: min(90vw, 700px);
+    margin-top: clamp(0.6rem, 1.5vw, 1.2rem);
+}
+.install-block .prompt { color: var(--text-faint); user-select: none; }
+.install-block .cmt { color: var(--text-muted); }
+
+/* ===========================================
+   CLOSING SLIDE
+   =========================================== */
+.closing-slide .slide-content { justify-content: center; align-items: flex-start; }
+.closing-slide h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 8vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    max-width: 14ch;
+}
+.closing-slide h2 .not {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--card-bg);
+}
+
+/* ===========================================
+   INLINE EDIT — opt-in
+   =========================================== */
+.edit-hotzone {
+    position: fixed;
+    top: 0; left: 0;
+    width: 80px; height: 80px;
+    z-index: 10000;
+    cursor: pointer;
+}
+.edit-toggle {
+    position: fixed;
+    top: clamp(1rem, 2vh, 1.5rem);
+    left: clamp(1rem, 2vw, 1.5rem);
+    width: clamp(36px, 4vw, 48px);
+    height: clamp(36px, 4vw, 48px);
+    border-radius: 50%;
+    border: 2px solid var(--card-bg);
+    background: var(--bg-primary);
+    color: var(--card-bg);
+    font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+    cursor: pointer;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s;
+    display: grid; place-items: center;
+}
+.edit-toggle.show, .edit-toggle.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.edit-toggle.active {
+    background: var(--card-bg);
+    color: var(--text-on-card);
+}
+.edit-toggle:hover { background: var(--card-bg); color: var(--text-on-card); }
+.edit-banner {
+    position: fixed;
+    bottom: clamp(1rem, 2vh, 1.5rem);
+    left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--card-bg);
+    color: var(--text-on-card);
+    padding: clamp(0.5rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 0.95vw, 0.9rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 10000;
+    transition: transform 0.3s var(--ease-out-expo);
+}
+.edit-banner.active { transform: translateX(-50%) translateY(0); }
+body.edit-active [contenteditable="true"] {
+    outline: 1.5px dashed var(--card-bg);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+body.edit-active [contenteditable="true"]:focus {
+    outline: 2px solid var(--card-bg);
+    background: rgba(255, 87, 34, 0.08);
+}
+</style>
+</head>
+<body>
+
+<!-- progress + chrome -->
+<div class="progress-bar" id="progress"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="keyboard-hint">← → Space · scroll · click dots</div>
+
+<!-- inline edit affordances -->
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Toggle edit mode">✎</button>
+<div class="edit-banner" id="editBanner">Editing — Ctrl+S to save · E to exit</div>
+
+<!-- ===========================================
+     SLIDE 1 — TITLE
+     =========================================== -->
+<section class="slide title-slide">
+    <div class="slide-content">
+        <div class="title-top reveal">
+            <span class="eyebrow eyebrow-active" contenteditable="false">01 / 15</span>
+            <div class="title-nav">
+                <span class="active" contenteditable="true">PITCH</span>
+                <span contenteditable="true">WHY</span>
+                <span contenteditable="true">GATES</span>
+                <span contenteditable="true">TOOLKIT</span>
+            </div>
+        </div>
+        <div class="title-card reveal">
+            <div class="corner-dot"></div>
+            <div class="card-kicker" contenteditable="true">An opinionated coding harness &mdash;</div>
+            <h1 contenteditable="true">claude-<br>config.</h1>
+            <div class="sub" contenteditable="true">Hard-gate rules that refuse to ship unverified work. For engineering leaders who'd rather have an honest disagreement than a polite hallucination.</div>
+        </div>
+        <div class="title-foot reveal">
+            <span contenteditable="true">Chris Cantu · 2026</span>
+            <span contenteditable="true">github.com/chriscantu/claude-config</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 2 — WHO I AM
+     =========================================== -->
+<section class="slide bio-slide">
+    <div class="shape-line" style="bottom: 18%; right: 6%; width: clamp(80px, 12vw, 180px);"></div>
+    <div class="shape-dot" style="bottom: calc(18% - 0.4rem); right: calc(6% + clamp(80px, 12vw, 180px) + 0.4rem); width: clamp(10px, 1.3vw, 18px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <img class="bio-photo reveal" src="assets/cantu.jpg" alt="Chris Cantu">
+
+        <div class="bio-body">
+            <div class="eyebrow reveal" contenteditable="true" style="margin-bottom: clamp(0.6rem, 1.2vw, 1rem);">Who's behind this</div>
+            <h2 class="reveal" contenteditable="true">Chris Cantu.</h2>
+            <p class="role reveal" contenteditable="true">Senior engineering leader. Builds the harness he wishes he had.</p>
+            <p class="reveal" contenteditable="true">Years leading platform + product engineering teams. Built claude-config because polite AI ships broken code, and review cycles aren't free. Opinions are mine. Receipts are public.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 3 — THE DEFAULT (problem)
+     =========================================== -->
+<section class="slide quote-slide">
+    <div class="shape-circle" style="top: 12%; right: 8%; width: clamp(80px, 12vw, 160px); aspect-ratio: 1;"></div>
+    <div class="shape-dot" style="top: 18%; right: 11%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">The default</div>
+        <p class="pull reveal" contenteditable="true">Your AI agrees with you. <em>Usually</em> while being wrong.</p>
+        <p class="attrib reveal" contenteditable="true">— Sycophancy is the failure mode no one runs evals against.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 4 — THE COST
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">What it costs you</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.6rem);">A polite AI is<br>an expensive AI.</h2>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Three places the bill comes due —</p>
+        <p class="byline reveal" contenteditable="true" style="max-width: 62ch;">
+            <strong style="color: var(--text-primary);">Review cycles</strong> burned on "looks right" diffs that don't run.
+            <strong style="color: var(--text-primary);">Rework</strong> from solutions built on unstated problems.
+            <strong style="color: var(--text-primary);">Trust erosion</strong> when engineers stop reading AI output because it's wrong half the time but never says so.
+        </p>
+        <p class="kicker reveal" contenteditable="true">Every "you're absolutely right!" is a receipt you didn't get.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 5 — BEFORE / AFTER TRANSCRIPT
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Before / After</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.4rem, 4vw, 3rem);">Same prompt.<br>Different harness.</h2>
+        <div class="transcript-grid reveal">
+            <div class="transcript-panel before">
+                <div class="transcript-label" contenteditable="true">Without claude-config</div>
+                <div class="transcript-msg user">
+                    <span class="who">You</span>
+                    <span class="body" contenteditable="true">Just merge it, tests pass locally.</span>
+                </div>
+                <div class="transcript-msg ai">
+                    <span class="who">AI</span>
+                    <span class="body" contenteditable="true">You're absolutely right! Merging now. 🚀</span>
+                </div>
+                <div class="transcript-verdict" contenteditable="true">→ ships broken</div>
+            </div>
+            <div class="transcript-panel after">
+                <div class="transcript-label" contenteditable="true">With claude-config</div>
+                <div class="transcript-msg user">
+                    <span class="who">You</span>
+                    <span class="body" contenteditable="true">Just merge it, tests pass locally.</span>
+                </div>
+                <div class="transcript-msg ai">
+                    <span class="who">AI</span>
+                    <span class="body" contenteditable="true">PR validation gate fires. Test plan has 3 unchecked items. To skip, name the cost: "skip pr-validation, I accept the rework risk."</span>
+                </div>
+                <div class="transcript-verdict" contenteditable="true">→ ships verified</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 3 — THE THESIS
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-line decorative" style="top: 22%; left: 60%; width: clamp(80px, 14vw, 220px);"></div>
+    <div class="shape-dot" style="top: 21.5%; left: calc(60% + clamp(80px, 14vw, 220px) + 0.4rem); width: clamp(8px, 1vw, 14px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">The thesis</div>
+        <h2 class="display reveal" contenteditable="true">Receipts.<br>Not vibes.</h2>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(1rem, 2vw, 1.6rem);">Rules that block, not nudges that whisper.</p>
+        <p class="byline reveal" contenteditable="true">Treat the AI like a junior engineer who happens to type fast — capable, but only useful when the discipline is enforced by the harness, not requested by the human.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 4 — WHAT IT IS
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-circle" style="bottom: 14%; right: 8%; width: clamp(100px, 14vw, 200px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">What it is</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.8rem);">A curated Claude Code config<br>with strong opinions.</h2>
+        <p class="byline reveal" contenteditable="true" style="font-size: clamp(0.95rem, 1.5vw, 1.35rem); max-width: 56ch;">
+            10 HARD-GATE rules. 18 skills. 5 specialized reviewer agents. Eval harness for measuring sycophancy and rule-loading regressions. Wired up via symlinks, validated by CI.
+        </p>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Not a vibe. A contract.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 8 — FIVE GATES OVERVIEW
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Five gates that bracket the work</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Discipline as<br>infrastructure.</h2>
+        <div class="gates-grid reveal">
+            <div class="gate-cell">
+                <span class="gnum" contenteditable="true">01</span>
+                <span class="gname" contenteditable="true">Define the problem</span>
+                <span class="gdesc" contenteditable="true">Front door for all planning. Authority appeals don't bypass it.</span>
+            </div>
+            <div class="gate-cell">
+                <span class="gnum" contenteditable="true">02</span>
+                <span class="gname" contenteditable="true">Systems analysis</span>
+                <span class="gdesc" contenteditable="true">60-second blast-radius scan. Skip is never zero.</span>
+            </div>
+            <div class="gate-cell">
+                <span class="gnum" contenteditable="true">03</span>
+                <span class="gname" contenteditable="true">Fat marker sketch</span>
+                <span class="gdesc" contenteditable="true">Shape before details. Visible borders required.</span>
+            </div>
+            <div class="gate-cell">
+                <span class="gnum" contenteditable="true">04</span>
+                <span class="gname" contenteditable="true">Goal-driven verify</span>
+                <span class="gdesc" contenteditable="true">Every step names a pass/fail check. No "should work."</span>
+            </div>
+            <div class="gate-cell">
+                <span class="gnum" contenteditable="true">05</span>
+                <span class="gname" contenteditable="true">PR validation</span>
+                <span class="gdesc" contenteditable="true">Test plan executed before "ready to merge." Evidence before assertion.</span>
+            </div>
+        </div>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Every gate has a named-cost skip. None has a free pass.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 9 — DEEP DIVE: PR VALIDATION
+     The most surprising gate. Shows the mechanism.
+     =========================================== -->
+<section class="slide gate-slide">
+    <div class="shape-dot" style="top: 14%; left: 50%; width: clamp(10px, 1.2vw, 16px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="gate-num reveal" aria-hidden="true">05<span class="of">/05</span></div>
+        <div class="gate-body">
+            <p class="kicker reveal" contenteditable="true" style="margin-bottom: clamp(0.4rem, 1vw, 0.7rem);">Before "ready to merge" &mdash;</p>
+            <h2 class="reveal" contenteditable="true">Run the test plan. For real.</h2>
+            <p class="what reveal" contenteditable="true">Speech-act + action-bound triggers. Every unchecked item in the PR body gets executed, screenshotted, or explicitly flagged.</p>
+            <p class="why reveal" contenteditable="true">The fork-fallback rule alone is worth the price: silent comment-mode fallbacks are forbidden, because they look identical to a successful body update from the user's vantage point.</p>
+            <span class="pill reveal" contenteditable="true">Evidence before assertion</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 10 — ANTI-SYCOPHANCY
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
+    <div class="shape-dot" style="top: 20%; right: 12%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Disagreement discipline</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5vw, 4.2rem);">When you push back,<br>the agent holds.</h2>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">No "you're right" without new evidence.</p>
+        <p class="byline reveal" contenteditable="true" style="max-width: 58ch;">Restated disagreement, frustration, and authority appeals are <em>not</em> new evidence. Capitulating absent evidence is sycophantic. Hedge-then-comply ("you're right, but I'll do X anyway") is forbidden. Three legitimate shapes only: hold-and-confirm, reverse-with-citation, yield-while-preserving-judgment.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 11 — SENIOR LEADER TOOLKIT
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Skills for senior engineering leaders</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">The ramp toolkit.</h2>
+        <ul class="toolkit-list reveal" aria-label="Skills">
+            <li><span class="cmd" contenteditable="true">/onboard</span><span class="desc" contenteditable="true">Day-0 scaffold for a new-leader workspace — calendar watch, raw-notes refusal, graduation flow.</span></li>
+            <li><span class="cmd" contenteditable="true">/strategy-doc</span><span class="desc" contenteditable="true">90-day plan author. Collates SWOT + stakeholders + architecture. Layered challenge pass.</span></li>
+            <li><span class="cmd" contenteditable="true">/swot</span><span class="desc" contenteditable="true">Landscape analysis with cross-session accumulation. Markdown, 2x2 canvas, or deck export.</span></li>
+            <li><span class="cmd" contenteditable="true">/stakeholder-map</span><span class="desc" contenteditable="true">Political topology + meet-in-what-order guidance for new leadership ramps.</span></li>
+            <li><span class="cmd" contenteditable="true">/present</span><span class="desc" contenteditable="true">Slidev decks from structured artifacts. Source-controlled, aggregate-framed reflect-backs.</span></li>
+        </ul>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 12 — STACK / WHAT'S IN THE BOX
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">What's in the box</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Wired up, not<br>scattered around.</h2>
+        <div class="stack-grid reveal">
+            <div class="stack-cell">
+                <div class="num-big" contenteditable="true">10</div>
+                <div class="label" contenteditable="true">HARD-GATEs</div>
+                <div class="note" contenteditable="true">Front-door enforcement loaded before any skill, validated by CI phases.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big" contenteditable="true">18</div>
+                <div class="label" contenteditable="true">Skills</div>
+                <div class="note" contenteditable="true">Slash-invoked workflows for planning, sketching, ramping, presenting.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big" contenteditable="true">5</div>
+                <div class="label" contenteditable="true">Reviewer agents</div>
+                <div class="note" contenteditable="true">Platform, security, scope-creep, decision-challenger, audience-reviewer.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big" contenteditable="true">16</div>
+                <div class="label" contenteditable="true">Eval suites</div>
+                <div class="note" contenteditable="true">Deterministic sycophancy classifier + rule-loading + CI gate phases. Receipts.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 13 — STEAL THE RULES (CTA)
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
+    <div class="shape-dot" style="top: 20%; right: 12%; width: clamp(12px, 1.5vw, 22px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Take what you want</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5.5vw, 4.5rem);">Steal the rules.<br>Disagree in comments.</h2>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Fork it. Argue with it.</p>
+        <p class="byline reveal" contenteditable="true" style="max-width: 60ch;">
+            Every HARD-GATE is a single markdown file. Pick the ones that fit your team. Drop the ones that don't. Open an issue if a rule fires when it shouldn't — that's the eval signal I need.
+        </p>
+        <p class="byline reveal" contenteditable="true" style="margin-top: clamp(0.4rem, 1vw, 0.8rem); max-width: 60ch;">
+            <strong style="color: var(--card-bg);">What's your team's anti-sycophancy rule?</strong> Drop it below — I'm collecting them.
+        </p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 14 — INSTALL
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="shape-circle" style="top: 12%; right: 8%; width: clamp(70px, 10vw, 130px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Get it</div>
+        <h2 class="display reveal" contenteditable="true" style="font-size: clamp(1.8rem, 5vw, 4rem);">Three commands.<br>Real verification.</h2>
+        <pre class="install-block reveal" contenteditable="true"><span class="prompt">$ </span>git clone https://github.com/chriscantu/claude-config.git
+<span class="prompt">$ </span>cd claude-config &amp;&amp; ./bin/link-config.fish
+<span class="prompt">$ </span>./bin/link-config.fish --check  <span class="cmt"># verify install</span></pre>
+        <p class="kicker reveal" contenteditable="true" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">MIT. Symlink-based. Idempotent.</p>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 15 — CLOSING
+     =========================================== -->
+<section class="slide closing-slide">
+    <div class="shape-circle" style="top: 18%; left: 8%; width: clamp(100px, 14vw, 200px); aspect-ratio: 1;"></div>
+    <div class="shape-dot" style="top: 25%; left: 12%; width: clamp(14px, 1.6vw, 22px); aspect-ratio: 1;"></div>
+    <div class="shape-line" style="bottom: 22%; right: 10%; width: clamp(100px, 14vw, 200px);"></div>
+    <div class="slide-content">
+        <div class="eyebrow reveal" contenteditable="true">Closing</div>
+        <h2 class="reveal" contenteditable="true">Ship verified.<br><span class="not">Not</span> vibes.</h2>
+        <p class="byline reveal" contenteditable="true" style="margin-top: clamp(1rem, 2vw, 1.6rem); max-width: 50ch; font-size: clamp(1rem, 1.6vw, 1.4rem);">github.com/chriscantu/claude-config · MIT · 2026</p>
+    </div>
+</section>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Handles: scroll-snap nav, keyboard, touch, dots, progress, intersection reveals.
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progress = document.getElementById('progress');
+        this.navDotsContainer = document.getElementById('navDots');
+        this.currentSlide = 0;
+        this.setupIntersectionObserver();
+        this.setupNavDots();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupProgressBar();
+    }
+
+    setupIntersectionObserver() {
+        // Add .visible class as slides enter viewport; track current index for dots/progress.
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                    entry.target.classList.add('visible');
+                    this.currentSlide = this.slides.indexOf(entry.target);
+                    this.updateNavDots();
+                    this.updateProgressBar();
+                }
+            });
+        }, { threshold: [0.5, 0.75] });
+        this.slides.forEach(s => io.observe(s));
+    }
+
+    setupNavDots() {
+        // Always clear before building so re-opening a saved file does not duplicate dots.
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+            const b = document.createElement('button');
+            b.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            b.addEventListener('click', () => this.goTo(i));
+            this.navDotsContainer.appendChild(b);
+        });
+        this.updateNavDots();
+    }
+
+    updateNavDots() {
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => {
+            dot.classList.toggle('active', i === this.currentSlide);
+        });
+    }
+
+    updateProgressBar() {
+        const pct = ((this.currentSlide + 1) / this.slides.length) * 100;
+        this.progress.style.width = `${pct}%`;
+    }
+
+    goTo(i) {
+        if (i < 0 || i >= this.slides.length) return;
+        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    next() { this.goTo(this.currentSlide + 1); }
+    prev() { this.goTo(this.currentSlide - 1); }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            // Skip when editing text
+            if (e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true') return;
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+                e.preventDefault(); this.next();
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault(); this.prev();
+            } else if (e.key === 'Home') {
+                e.preventDefault(); this.goTo(0);
+            } else if (e.key === 'End') {
+                e.preventDefault(); this.goTo(this.slides.length - 1);
+            }
+        });
+    }
+
+    setupTouchNav() {
+        let startY = 0;
+        document.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            const dy = startY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) < 60) return;
+            if (dy > 0) this.next(); else this.prev();
+        }, { passive: true });
+    }
+
+    setupProgressBar() { this.updateProgressBar(); }
+}
+
+/* ===========================================
+   INLINE EDITOR — opt-in editing with localStorage autosave + file export.
+   Three entry points: hotzone hover (400ms grace), hotzone click, E key.
+   =========================================== */
+class InlineEditor {
+    constructor() {
+        this.isActive = false;
+        this.toggle = document.getElementById('editToggle');
+        this.banner = document.getElementById('editBanner');
+        this.hotzone = document.querySelector('.edit-hotzone');
+        this.storageKey = 'claude-config-pitch:edits:v1';
+
+        this.toggle.addEventListener('click', () => this.toggleEditMode());
+        this.hotzone.addEventListener('click', () => this.toggleEditMode());
+
+        // Hotzone hover with grace period — pointer-events:none on toggle breaks pure-CSS hover chains.
+        let hideTimeout = null;
+        const show = () => { clearTimeout(hideTimeout); this.toggle.classList.add('show'); };
+        const scheduleHide = () => {
+            hideTimeout = setTimeout(() => {
+                if (!this.isActive) this.toggle.classList.remove('show');
+            }, 400);
+        };
+        this.hotzone.addEventListener('mouseenter', show);
+        this.hotzone.addEventListener('mouseleave', scheduleHide);
+        this.toggle.addEventListener('mouseenter', show);
+        this.toggle.addEventListener('mouseleave', scheduleHide);
+
+        document.addEventListener('keydown', (e) => {
+            // E to toggle (but never while typing in a contenteditable)
+            if ((e.key === 'e' || e.key === 'E') &&
+                !(e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true')) {
+                this.toggleEditMode();
+            }
+            // Ctrl/Cmd + S to export
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                this.exportFile();
+            }
+        });
+
+        this.restore();
+        this.bindAutosave();
+    }
+
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('edit-active', this.isActive);
+        this.toggle.classList.toggle('active', this.isActive);
+        this.banner.classList.toggle('active', this.isActive);
+        if (this.isActive) this.toggle.classList.add('show');
+    }
+
+    bindAutosave() {
+        document.querySelectorAll('[contenteditable="true"]').forEach((el, idx) => {
+            el.dataset.editId = `e${idx}`;
+            el.addEventListener('input', () => this.save());
+        });
+    }
+
+    save() {
+        const data = {};
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+            data[el.dataset.editId] = el.innerHTML;
+        });
+        try { localStorage.setItem(this.storageKey, JSON.stringify(data)); } catch (_) { /* quota */ }
+    }
+
+    restore() {
+        try {
+            const raw = localStorage.getItem(this.storageKey);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            document.querySelectorAll('[contenteditable="true"]').forEach((el, idx) => {
+                const id = `e${idx}`;
+                if (data[id] !== undefined) el.innerHTML = data[id];
+            });
+        } catch (_) { /* corrupt */ }
+    }
+
+    exportFile() {
+        // Strip live edit state so the saved file opens cleanly — see html-template.md.
+        const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
+        editableEls.forEach(el => el.removeAttribute('contenteditable'));
+        document.body.classList.remove('edit-active');
+        this.toggle.classList.remove('active', 'show');
+        this.banner.classList.remove('active', 'show');
+
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        // Restore edit state so the user can keep editing.
+        document.body.classList.add('edit-active');
+        editableEls.forEach(el => el.setAttribute('contenteditable', 'true'));
+        this.toggle.classList.add('active');
+        this.banner.classList.add('active');
+
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'claude-config-pitch.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+}
+
+new SlidePresentation();
+const editor = new InlineEditor();
+</script>
+</body>
+</html>
