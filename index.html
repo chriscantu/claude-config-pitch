@@ -725,7 +725,7 @@ h1.display, h2.display {
 <section class="slide title-slide" id="sec-pitch">
     <div class="slide-content">
         <div class="title-top reveal">
-            <span class="eyebrow eyebrow-active">01 / 14</span>
+            <span class="eyebrow eyebrow-active">01 / 15</span>
             <nav class="title-nav" aria-label="Section jump">
                 <a href="#sec-pitch" class="active">PITCH</a>
                 <a href="#sec-why">WHY</a>
@@ -846,22 +846,54 @@ h1.display, h2.display {
 </section>
 
 <!-- ===========================================
-     SLIDE 4 — WHAT IT IS
+     SLIDE 7 — WHAT IT IS (rewritten with context)
      =========================================== -->
 <section class="slide content-slide">
     <div class="shape-circle" style="bottom: 14%; right: 8%; width: clamp(100px, 14vw, 200px); aspect-ratio: 1;"></div>
     <div class="slide-content">
         <div class="eyebrow reveal">What it is</div>
-        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.8rem);">A curated Claude Code config<br>with strong opinions.</h2>
-        <p class="byline reveal" style="font-size: clamp(0.95rem, 1.5vw, 1.35rem); max-width: 56ch;">
-            10 HARD-GATE rules. 18 skills. 5 specialized reviewer agents. Eval harness for measuring sycophancy and rule-loading regressions. Wired up via symlinks, validated by CI.
+        <h2 class="display reveal" style="font-size: clamp(1.8rem, 5vw, 4rem);">Discipline,<br>encoded.</h2>
+        <p class="byline reveal" style="max-width: 60ch;">
+            Claude Code is Anthropic's CLI for AI-assisted engineering. By default, the agent is helpful &mdash; to a fault. <strong style="color: var(--text-primary);">claude-config replaces "helpful" with "rigorous":</strong> a set of rules and reviewers that fire before the agent acts, not after the work breaks.
         </p>
-        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">Not a vibe. A contract.</p>
+        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">From helpful to honest.</p>
     </div>
 </section>
 
 <!-- ===========================================
-     SLIDE 8 — FIVE GATES OVERVIEW
+     SLIDE 8 — STACK / WHAT'S IN THE BOX (moved up to pair with definition)
+     =========================================== -->
+<section class="slide content-slide">
+    <div class="slide-content">
+        <div class="eyebrow reveal">What's in the box</div>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Wired up, not<br>scattered around.</h2>
+        <div class="stack-grid reveal">
+            <div class="stack-cell">
+                <div class="num-big">10</div>
+                <div class="label">HARD-GATEs</div>
+                <div class="note">Front-door enforcement loaded before any skill, validated by CI phases.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big">18</div>
+                <div class="label">Skills</div>
+                <div class="note">Slash-invoked workflows for planning, sketching, ramping, presenting.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big">5</div>
+                <div class="label">Reviewer agents</div>
+                <div class="note">Platform, security, scope-creep, decision-challenger, audience-reviewer.</div>
+            </div>
+            <div class="stack-cell">
+                <div class="num-big">16</div>
+                <div class="label">Eval suites</div>
+                <div class="note">Deterministic sycophancy classifier + rule-loading + CI gate phases. Receipts.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 9 — FIVE GATES OVERVIEW
      =========================================== -->
 <section class="slide content-slide" id="sec-gates">
     <div class="slide-content">
@@ -899,7 +931,25 @@ h1.display, h2.display {
 </section>
 
 <!-- ===========================================
-     SLIDE 10 — ANTI-SYCOPHANCY
+     SLIDE 10 — DTP DEEP DIVE
+     The front-door gate. Illustrates "thought partner" thesis.
+     =========================================== -->
+<section class="slide gate-slide">
+    <div class="shape-dot" style="top: 14%; right: 12%; width: clamp(10px, 1.2vw, 16px); aspect-ratio: 1;"></div>
+    <div class="slide-content">
+        <div class="gate-num reveal" aria-hidden="true">01<span class="of">/05</span></div>
+        <div class="gate-body">
+            <p class="kicker reveal" style="margin-bottom: clamp(0.4rem, 1vw, 0.7rem);">Most agents solve. This one interrogates first.</p>
+            <h2 class="reveal">"What's the actual problem you're solving?"</h2>
+            <p class="what reveal">Before writing code, drafting a plan, or designing anything &mdash; the gate forces problem definition. Who's affected, what evidence supports the framing, what's the cost of being wrong.</p>
+            <p class="why reveal">Skip phrases like "CTO approved" or "ship by Friday" don't bypass it &mdash; they trigger it. The only valid override names the specific risk you accept. That's what thought partnership looks like in code: refuse the shortcut, demand the framing, let you decide if the risk is worth it.</p>
+            <span class="pill reveal">Solve the right problem first</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===========================================
+     SLIDE 11 — ANTI-SYCOPHANCY
      =========================================== -->
 <section class="slide content-slide">
     <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
@@ -913,7 +963,7 @@ h1.display, h2.display {
 </section>
 
 <!-- ===========================================
-     SLIDE 11 — SENIOR LEADER TOOLKIT
+     SLIDE 12 — SENIOR LEADER TOOLKIT
      =========================================== -->
 <section class="slide content-slide" id="sec-toolkit">
     <div class="slide-content">
@@ -927,38 +977,6 @@ h1.display, h2.display {
             <li><span class="cmd">/stakeholder-map</span><span class="desc">Political topology + meet-in-what-order guidance. <strong style="color: var(--text-primary); font-style: normal;">Coverage queries surface gaps</strong> you didn't know you had.</span></li>
             <li><span class="cmd">/present</span><span class="desc">Aggregate-framed reflect-back decks. <strong style="color: var(--text-primary); font-style: normal;">Source-controlled markdown</strong> — your strategy isn't a slide PDF, it's a diffable artifact.</span></li>
         </ul>
-    </div>
-</section>
-
-<!-- ===========================================
-     SLIDE 12 — STACK / WHAT'S IN THE BOX
-     =========================================== -->
-<section class="slide content-slide">
-    <div class="slide-content">
-        <div class="eyebrow reveal">What's in the box</div>
-        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.5rem);">Wired up, not<br>scattered around.</h2>
-        <div class="stack-grid reveal">
-            <div class="stack-cell">
-                <div class="num-big">10</div>
-                <div class="label">HARD-GATEs</div>
-                <div class="note">Front-door enforcement loaded before any skill, validated by CI phases.</div>
-            </div>
-            <div class="stack-cell">
-                <div class="num-big">18</div>
-                <div class="label">Skills</div>
-                <div class="note">Slash-invoked workflows for planning, sketching, ramping, presenting.</div>
-            </div>
-            <div class="stack-cell">
-                <div class="num-big">5</div>
-                <div class="label">Reviewer agents</div>
-                <div class="note">Platform, security, scope-creep, decision-challenger, audience-reviewer.</div>
-            </div>
-            <div class="stack-cell">
-                <div class="num-big">16</div>
-                <div class="label">Eval suites</div>
-                <div class="note">Deterministic sycophancy classifier + rule-loading + CI gate phases. Receipts.</div>
-            </div>
-        </div>
     </div>
 </section>
 
