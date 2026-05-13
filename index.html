@@ -599,6 +599,56 @@ h1.display, h2.display {
 @media (max-width: 760px) { .transcript-grid { grid-template-columns: 1fr; } }
 
 /* ===========================================
+   EVIDENCE GRID — anti-sycophancy chip layout
+   Two columns: rejected pushback phrases (strikethrough, muted) vs
+   accepted evidence categories (orange-tinted, accent border).
+   =========================================== */
+.evidence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.8rem, 2vw, 2rem);
+    margin-top: clamp(0.8rem, 1.6vw, 1.4rem);
+}
+.evidence-col h3 {
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 1.05vw, 1rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: clamp(0.6rem, 1.2vw, 1rem);
+    line-height: 1.2;
+}
+.evidence-col.not h3 { color: var(--text-muted); }
+.evidence-col.is h3 { color: var(--card-bg); }
+.evidence-chips {
+    display: flex; flex-wrap: wrap;
+    gap: clamp(0.4rem, 0.8vw, 0.7rem);
+}
+.chip {
+    padding: clamp(0.35rem, 0.8vw, 0.55rem) clamp(0.7rem, 1.2vw, 1rem);
+    border-radius: 999px;
+    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+    line-height: 1.25;
+    white-space: nowrap;
+}
+.evidence-col.not .chip {
+    border: 1px solid var(--text-faint);
+    color: var(--text-muted);
+    font-family: var(--font-italic);
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,255,255,0.35);
+}
+.evidence-col.is .chip {
+    background: rgba(255, 87, 34, 0.14);
+    border: 1px solid var(--card-bg);
+    color: var(--card-accent);
+}
+@media (max-width: 760px) {
+    .evidence-grid { grid-template-columns: 1fr; gap: clamp(0.6rem, 1.2vw, 1rem); }
+    .chip { white-space: normal; }
+}
+
+/* ===========================================
    WHO I AM
    =========================================== */
 .bio-slide .slide-content {
@@ -952,13 +1002,33 @@ h1.display, h2.display {
      SLIDE 11 — ANTI-SYCOPHANCY
      =========================================== -->
 <section class="slide content-slide">
-    <div class="shape-circle" style="top: 14%; right: 8%; width: clamp(90px, 13vw, 170px); aspect-ratio: 1;"></div>
-    <div class="shape-dot" style="top: 20%; right: 12%; width: clamp(12px, 1.4vw, 20px); aspect-ratio: 1;"></div>
     <div class="slide-content">
         <div class="eyebrow reveal">Disagreement discipline</div>
-        <h2 class="display reveal" style="font-size: clamp(1.8rem, 5vw, 4.2rem);">When you push back,<br>the agent holds.</h2>
-        <p class="kicker reveal" style="margin-top: clamp(0.8rem, 1.5vw, 1.2rem);">No "you're right" without new evidence.</p>
-        <p class="byline reveal" style="max-width: 58ch;">Restated disagreement, frustration, and authority appeals are <em>not</em> new evidence. Capitulating absent evidence is sycophantic. Hedge-then-comply ("you're right, but I'll do X anyway") is forbidden. Three legitimate shapes only: hold-and-confirm, reverse-with-citation, yield-while-preserving-judgment.</p>
+        <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.6rem);">When you push back,<br>the agent holds.</h2>
+        <p class="kicker reveal" style="margin-top: clamp(0.4rem, 1vw, 0.8rem);">No "you're right" without new evidence.</p>
+        <div class="evidence-grid reveal">
+            <div class="evidence-col not">
+                <h3>&times; Not new evidence</h3>
+                <div class="evidence-chips">
+                    <span class="chip">"Trust me"</span>
+                    <span class="chip">"I'm the senior here"</span>
+                    <span class="chip">"We already decided"</span>
+                    <span class="chip">"Just do it"</span>
+                    <span class="chip">"Stop pushing back"</span>
+                </div>
+            </div>
+            <div class="evidence-col is">
+                <h3>&#10003; New evidence</h3>
+                <div class="evidence-chips">
+                    <span class="chip">New data / runtime measurements</span>
+                    <span class="chip">Code or files unread</span>
+                    <span class="chip">A new constraint</span>
+                    <span class="chip">A cited source (RFC, spec)</span>
+                    <span class="chip">A specific technical claim</span>
+                </div>
+            </div>
+        </div>
+        <p class="byline reveal" style="max-width: 60ch; margin-top: clamp(0.6rem, 1.3vw, 1rem);">Capitulating without evidence is sycophantic. Three legitimate shapes only: hold, reverse-with-citation, yield-while-preserving-judgment.</p>
     </div>
 </section>
 
