@@ -725,6 +725,48 @@ h1.display, h2.display {
 }
 
 /* ===========================================
+   TOOLKIT GRID — 2-column card layout for /commands
+   5th item spans the full row for visual balance.
+   =========================================== */
+.toolkit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.6rem, 1.4vw, 1.2rem);
+    margin-top: clamp(0.8rem, 1.6vw, 1.4rem);
+    list-style: none;
+    padding: 0;
+}
+.toolkit-grid > li {
+    border: 1px solid var(--text-faint);
+    border-radius: clamp(8px, 1vw, 14px);
+    padding: clamp(0.85rem, 1.8vw, 1.4rem);
+    background: rgba(255,255,255,0.025);
+    transition: border-color 0.2s, background 0.2s;
+}
+.toolkit-grid > li:hover { border-color: var(--card-bg); background: rgba(255,87,34,0.04); }
+.toolkit-grid > li:nth-child(5) { grid-column: 1 / -1; }
+.toolkit-grid .cmd {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    color: var(--card-bg);
+    margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
+    letter-spacing: -0.01em;
+}
+.toolkit-grid .desc {
+    display: block;
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: clamp(0.9rem, 1.25vw, 1.15rem);
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+@media (max-width: 760px) {
+    .toolkit-grid { grid-template-columns: 1fr; }
+    .toolkit-grid > li:nth-child(5) { grid-column: auto; }
+}
+
+/* ===========================================
    CODE / CTA — install snippet
    =========================================== */
 .install-block {
@@ -1040,7 +1082,7 @@ h1.display, h2.display {
         <div class="eyebrow reveal">Same rules. Leadership work.</div>
         <h2 class="display reveal" style="font-size: clamp(1.6rem, 4.5vw, 3.4rem);">The discipline doesn't<br>stop at the IDE.</h2>
         <p class="kicker reveal" style="margin-top: clamp(0.6rem, 1.2vw, 1rem);">Every skill inherits the gates. No skill flatters you into a plan.</p>
-        <ul class="toolkit-list reveal" aria-label="Skills">
+        <ul class="toolkit-grid reveal" aria-label="Skills">
             <li><span class="cmd">/onboard</span><span class="desc">New-leader ramp scaffold. <strong style="color: var(--text-primary); font-style: normal;">Refuses to read raw 1:1 notes</strong> — confidentiality is enforced by the harness, not promised.</span></li>
             <li><span class="cmd">/strategy-doc</span><span class="desc">90-day plan author. <strong style="color: var(--text-primary); font-style: normal;">Layered challenge pass</strong> — completeness, quality, consistency. Won't ship a strategy nobody pushed back on.</span></li>
             <li><span class="cmd">/swot</span><span class="desc">Landscape analysis. <strong style="color: var(--text-primary); font-style: normal;">Cross-session memory accumulation</strong> with built-in challenge layer — separates observation from intervention.</span></li>
